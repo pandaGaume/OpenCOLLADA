@@ -7,7 +7,6 @@
     for details please see LICENSE file or the website
     http://www.opensource.org/licenses/mit-license.php
 */
-#include "pcre.h"
 
 #include "COLLADABUStableHeaders.h"
 #include "COLLADABUURI.h"

@@ -12,9 +12,7 @@
 #define __COLLADABU_PCRECOMPILEDPATTERN_H__
 
 #include "COLLADABUPrerequisites.h"
-
-struct real_pcre8_or_16;
-typedef struct real_pcre8_or_16 pcre;
+#include "pcre.h"
 
 
 namespace COLLADABU
