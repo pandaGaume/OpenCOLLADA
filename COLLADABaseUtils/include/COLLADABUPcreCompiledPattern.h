@@ -13,6 +13,10 @@
 
 #include "COLLADABUPrerequisites.h"
 
+struct real_pcre8_or_16;
+typedef struct real_pcre8_or_16 pcre;
+
+
 namespace COLLADABU
 {
 
