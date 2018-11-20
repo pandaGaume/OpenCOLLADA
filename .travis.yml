@@ -10,3 +10,4 @@ addons:
     - g++
     - cmake
 script: mkdir build && cd build && cmake .. && make
+
