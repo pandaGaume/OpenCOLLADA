@@ -3,6 +3,8 @@ os:
   - osx
 language: cpp
 compiler: g++
+cache: 
+- build
 addons:
   apt:
     packages:
