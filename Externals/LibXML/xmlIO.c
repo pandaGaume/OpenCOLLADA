@@ -765,7 +765,7 @@ static int
 xmlFdRead (void * context, char * buffer, int len) {
     int ret;
 
-    ret = read((int) (long) context, &buffer[0], len);
+    ret = _read((int) (long) context, &buffer[0], len);
     if (ret < 0) xmlIOErr(0, "read()");
     return(ret);
 }
@@ -804,7 +804,7 @@ xmlFdWrite (void * context, const char * buffer, int len) {
 static int
 xmlFdClose (void * context) {
     int ret;
-    ret = close((int) (long) context);
+    ret = _close((int) (long) context);
     if (ret < 0) xmlIOErr(0, "close()");
     return(ret);
 }
@@ -3532,7 +3532,7 @@ xmlParserGetDirectory(const char *filename) {
 	else *cur = 0;
 	ret = xmlMemStrdup(dir);
     } else {
-        if (getcwd(dir, 1024) != NULL) {
+        if (_getcwd(dir, 1024) != NULL) {
 	    dir[1023] = 0;
 	    ret = xmlMemStrdup(dir);
 	}

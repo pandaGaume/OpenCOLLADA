@@ -24,8 +24,7 @@
 #include <map>
 #include <stack>
 #include <string.h>
-
-
+#include <algorithm>
 
 namespace GeneratedSaxParser
 {
