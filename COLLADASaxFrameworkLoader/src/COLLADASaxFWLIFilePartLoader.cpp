@@ -298,16 +298,28 @@ namespace COLLADASaxFWL
         return true;
 	}
 
-    //------------------------------
-	bool IFilePartLoader::handleFWLError( const SaxFWLError& saxFWLError )
+ //   //------------------------------
+	//bool IFilePartLoader::handleFWLError( const SaxFWLError& saxFWLError )
+	//{
+	//	IErrorHandler* errorHandler = getColladaLoader()->getErrorHandler();
+	//	bool stopParsing = false; 
+	//	if ( errorHandler )
+	//	{
+	//		stopParsing = errorHandler->handleError( &saxFWLError );
+	//	}
+	//	return (saxFWLError.getSeverity() == IError::SEVERITY_CRITICAL) ? true : stopParsing;
+	//}
+
+	//------------------------------
+	bool IFilePartLoader::handleFWLError(const SaxFWLError& saxFWLError)
 	{
 		IErrorHandler* errorHandler = getColladaLoader()->getErrorHandler();
-		bool stopParsing = false; 
-		if ( errorHandler )
+		bool continueParsing = false;
+		if (errorHandler)
 		{
-			stopParsing = errorHandler->handleError( &saxFWLError );
+			continueParsing = !errorHandler->handleError(&saxFWLError);
 		}
-		return (saxFWLError.getSeverity() == IError::SEVERITY_CRITICAL) ? true : stopParsing;
+		return (saxFWLError.getSeverity() == IError::SEVERITY_CRITICAL) ? false : continueParsing;
 	}
 
 	//------------------------------

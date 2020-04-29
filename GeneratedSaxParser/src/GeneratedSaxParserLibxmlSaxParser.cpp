@@ -10,8 +10,10 @@
 
 #include <cstdarg>
 #include <cstring>
-#ifdef _DEBUG
+#ifdef _DEBUG 
+#ifdef _VERBOSE
 #include <iostream>
+#endif
 #endif
 
 #include "GeneratedSaxParserLibxmlSaxParser.h"
@@ -177,11 +179,10 @@ namespace GeneratedSaxParser
 
 	void LibxmlSaxParser::startElement( void* user_data, const ::xmlChar* name, const ::xmlChar** attrs )
 	{
-#ifdef _DEBUG
+#ifdef _DEBUG 
+#ifdef _VERBOSE
 		std::cout << "StartElement " << name << "\r\n";
-		if (strcmp((char*)name, "texture") == 0) {
-			std::cout << "--debug" << "\r\n";
-		}
+#endif
 #endif
 		LibxmlSaxParser* thisObject = (LibxmlSaxParser*)user_data;
 		Parser* parser = thisObject->getParser();
@@ -191,8 +192,10 @@ namespace GeneratedSaxParser
 
 	void LibxmlSaxParser::endElement( void* user_data, const ::xmlChar* name)
 	{
-#ifdef _DEBUG
+#ifdef _DEBUG 
+#ifdef _VERBOSE
 		std::cout << "EndElement " << name << "\r\n";
+#endif
 #endif
 		LibxmlSaxParser* thisObject = (LibxmlSaxParser*)user_data;
 		Parser* parser = thisObject->getParser();
