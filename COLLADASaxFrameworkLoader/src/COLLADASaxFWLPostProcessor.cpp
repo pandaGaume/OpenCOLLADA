@@ -62,11 +62,6 @@ namespace COLLADASaxFWL
 			writeMorphControllers();
 		}
 
-		if ( (getObjectFlags() & Loader::VISUAL_SCENES_FLAG) != 0 )
-		{
-			writeVisualScenes();
-		}
-
 		if ( (getObjectFlags() & Loader::LIBRARY_NODES_FLAG) != 0 )
 		{
 			writeLibraryNodes();
@@ -82,10 +77,16 @@ namespace COLLADASaxFWL
 			linkAndWriteFormulas();
 		}
 
+		if ((getObjectFlags() & Loader::VISUAL_SCENES_FLAG) != 0)
+		{
+			writeVisualScenes();
+		}
+
 		if ( (getObjectFlags() & Loader::KINEMATICS_FLAG) != 0 )
 		{
 			createAndWriteKinematicsScene();
 		}
+
 	}
 
 	//-----------------------------
