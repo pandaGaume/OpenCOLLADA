@@ -183,7 +183,7 @@ namespace COLLADAFW
 		}
 
         /** Disable default copy ctor. */
-		Array( const Array& pre );
+		Array( const Array& pre ) = delete ;
 
 	};
 
