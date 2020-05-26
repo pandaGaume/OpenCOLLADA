@@ -153,7 +153,7 @@ namespace COLLADASaxFWL
 			{
                 // Get the current color or texture element.
 				COLLADAFW::ColorOrTexture* colorOrTexture = getCurrentColorOrTexture ( true );
-
+				
                 // Check if the texture is referenced.
                 String textureSid = (const char *)attributeData.texture;
 				SidSamplerInfoMap::const_iterator it = mEffectProfileSidSamplerInfoMap.find(textureSid);
@@ -162,14 +162,46 @@ namespace COLLADASaxFWL
                     it = mEffectSidSamplerInfoMap.find((const char*)attributeData.texture);
                     if ( it == mEffectSidSamplerInfoMap.end() )
                     {
-						String msg("Texture with sid \"" + textureSid + "\" not found");
-						if ( mCurrentEffect )
-						{
-							msg += " in effect with id \"" + mCurrentEffect->getOriginalId() + "\"";
-						}
-						msg += ".";
-                        success = handleFWLError ( SaxFWLError::ERROR_UNRESOLVED_REFERENCE, msg );
-                        break;
+						// some exporter such FX did NOT set standard texture->sampler->surface->image pipeline and reference directly the image ID
+						// into the texture, then try to get the image as direct reference
+						// to do so, we "fake" the parsing of <Surface> and <Sampler> parameters 
+						// 1 - create virtual surface
+						COLLADASaxFWL::String surfaceID = "__virtual_surface_" + textureSid;
+						COLLADASaxFWL::LibraryEffectsLoader::Surface surface;
+						surface.surfaceType = ENUM__fx_surface_type::ENUM__fx_surface_type__2D;
+						COLLADASaxFWL::String surfaceInitFrom = textureSid;
+						surface.imageUniqueId = createUniqueIdFromId((const ParserChar*)surfaceInitFrom.c_str(), COLLADAFW::Image::ID());
+						if (mCurrentProfile == PROFILE_NONE)
+							mEffectSidSurfaceMap.insert(std::make_pair(surfaceID, surface));
+						else
+							mEffectProfileSidSurfaceMap.insert(std::make_pair(surfaceID, surface));
+
+						// 2 - create virtual sampler
+						COLLADASaxFWL::String samplerID = "__virtual_sampler_" + textureSid;
+
+						COLLADAFW::Sampler * mCurrentSampler = new COLLADAFW::Sampler(createUniqueId(COLLADAFW::Sampler::ID()));
+						mCurrentSampler->setSamplerType(COLLADAFW::Sampler::SAMPLER_TYPE_2D);
+
+						SamplerInfo samplerInfo;
+						samplerInfo.sampler = mCurrentSampler;
+						samplerInfo.id = 0;
+						samplerInfo.surfaceSid = surfaceID;
+
+						if (mCurrentProfile == PROFILE_NONE)
+							mEffectSidSamplerInfoMap.insert(std::make_pair(samplerID, samplerInfo));
+						else
+							mEffectProfileSidSamplerInfoMap.insert(std::make_pair(samplerID, samplerInfo));
+
+						textureSid = samplerID;
+
+						//String msg("Texture with sid \"" + textureSid + "\" not found");
+						//if ( mCurrentEffect )
+						//{
+						//	msg += " in effect with id \"" + mCurrentEffect->getOriginalId() + "\"";
+						//}
+						//msg += ".";
+						//success = handleFWLError ( SaxFWLError::ERROR_UNRESOLVED_REFERENCE, msg );
+						//break;
                     }
                 }
 
@@ -240,21 +272,54 @@ namespace COLLADASaxFWL
 				continue;
 
 			// Check if the texture is referenced.
-			const String& textureSid = textureAttributes->textureSampler;
+			String textureSid = textureAttributes->textureSampler;
 			SidSamplerInfoMap::const_iterator it = mEffectProfileSidSamplerInfoMap.find(textureSid);
 			if ( it == mEffectProfileSidSamplerInfoMap.end() )
 			{
 				it = mEffectSidSamplerInfoMap.find( textureSid );
 				if ( it == mEffectSidSamplerInfoMap.end() )
 				{
-					String msg("Texture with sid \"" + textureSid + "\" not found");
-					if ( mCurrentEffect )
-					{
-						msg += " in effect with id \"" + mCurrentEffect->getOriginalId() + "\"";
-					}
-					msg += ".";
-					success = handleFWLError ( SaxFWLError::ERROR_UNRESOLVED_REFERENCE, msg );
-					continue;;
+					// some exporter such FX did NOT set standard texture->sampler->surface->image pipeline and reference directly the image ID
+					// into the texture, then try to get the image as direct reference
+					// to do so, we "fake" the parsing of <Surface> and <Sampler> parameters 
+					// 1 - create virtual surface
+					COLLADASaxFWL::String surfaceID = "__virtual_surface_" + textureSid;
+					COLLADASaxFWL::LibraryEffectsLoader::Surface surface;
+					surface.surfaceType = ENUM__fx_surface_type::ENUM__fx_surface_type__2D;
+					COLLADASaxFWL::String surfaceInitFrom = textureSid;
+					surface.imageUniqueId = createUniqueIdFromId((const ParserChar*)surfaceInitFrom.c_str(), COLLADAFW::Image::ID());
+					if (mCurrentProfile == PROFILE_NONE)
+						mEffectSidSurfaceMap.insert(std::make_pair(surfaceID, surface));
+					else
+						mEffectProfileSidSurfaceMap.insert(std::make_pair(surfaceID, surface));
+
+					// 2 - create virtual sampler
+					COLLADASaxFWL::String samplerID = "__virtual_sampler_" + textureSid;
+
+					COLLADAFW::Sampler* mCurrentSampler = new COLLADAFW::Sampler(createUniqueId(COLLADAFW::Sampler::ID()));
+					mCurrentSampler->setSamplerType(COLLADAFW::Sampler::SAMPLER_TYPE_2D);
+
+					SamplerInfo samplerInfo;
+					samplerInfo.sampler = mCurrentSampler;
+					samplerInfo.id = 0;
+					samplerInfo.surfaceSid = surfaceID;
+
+					if (mCurrentProfile == PROFILE_NONE)
+						mEffectSidSamplerInfoMap.insert(std::make_pair(samplerID, samplerInfo));
+					else
+						mEffectProfileSidSamplerInfoMap.insert(std::make_pair(samplerID, samplerInfo));
+
+					textureSid = samplerID;
+
+					//String msg("Texture with sid \"" + textureSid + "\" not found");
+					//if ( mCurrentEffect )
+					//{
+					//	msg += " in effect with id \"" + mCurrentEffect->getOriginalId() + "\"";
+					//}
+					//msg += ".";
+					//success = handleFWLError ( SaxFWLError::ERROR_UNRESOLVED_REFERENCE, msg );
+					//continue;
+
 				}
 			}
 
