@@ -1919,6 +1919,7 @@ namespace GeneratedSaxParser
 	bool ParserTemplate<DerivedClass, ImplClass>::elementBegin( const ParserChar* elementName,
 																   const ParserAttributes& attributes)
 	{
+
         if ( (mIgnoreElements > 0 || mUnknownElements > 0 || mNamespaceElements > 0) 
             && !mNamespacesStack.empty() )
         {

@@ -868,13 +868,14 @@ namespace GeneratedSaxParser
             failed = false;
             return COLLADABU::URI(0);
         }
-        const ParserString& string = toStringListItem(buffer, bufferEnd, failed);
-        return COLLADABU::URI(string.str, string.length);
+        //const ParserString& string = toStringListItem(buffer, bufferEnd, failed);
+        //return COLLADABU::URI(string.str);
         
         //FIXME: Testing fails on windows but pass on OSX with this fix.
         //Just get the string as it is for ids, so that we are able to read FBX-COLLADA
         //Otherwise, calling toStringItem would result in a truncated string when an id contains spaces
-        //return COLLADABU::URI((const char*)*buffer, bufferEnd - *buffer);
+        failed = false;
+        return COLLADABU::URI((const char*)*buffer, bufferEnd - *buffer);
     }
 
     //--------------------------------------------------------------------
@@ -886,13 +887,14 @@ namespace GeneratedSaxParser
             return COLLADABU::URI(0);
         }
         
-        const ParserString& string = toStringListItem(buffer, failed);
-        return COLLADABU::URI(string.str, string.length);
+        //const ParserString& string = toStringListItem(buffer, failed);
+        //return COLLADABU::URI(string.str);
         
         //FIXME: Testing fails on windows but pass on OSX with this fix.
         //Just get the string as it is for ids, so that we are able to read FBX-COLLADA
         //Otherwise, calling toStringItem would result in a truncated string when an id contains spaces
-        //return COLLADABU::URI((const char*)*buffer);
+        failed = false;
+        return COLLADABU::URI((const char*)*buffer, strlen((const char*)*buffer));
     }
 
 
