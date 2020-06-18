@@ -693,13 +693,15 @@ xmlInitPlatformSpecificIo(void)
 
     osvi.dwOSVersionInfoSize = sizeof(osvi);
 
-    if(GetVersionEx(&osvi) && (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT)) {
-      xmlWrapStat = xmlWrapStatUtf8;
-      xmlWrapOpen = xmlWrapOpenUtf8;
-    } else {
+    /// not longer necessary to keep this configuration in 2020 !!
+
+    //if(GetVersionEx(&osvi) && (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT)) {
+    //  xmlWrapStat = xmlWrapStatUtf8;
+    //  xmlWrapOpen = xmlWrapOpenUtf8;
+    //} else {
       xmlWrapStat = xmlWrapStatNative;
       xmlWrapOpen = xmlWrapOpenNative;
-    }
+    //}
 
     xmlPlatformIoInitialized = 1;
     return;
